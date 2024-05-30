@@ -16,6 +16,10 @@ let currentSub = '';
 
 const app = express();
 
+app.get('/',(req,res)=>{
+    res.send("hello this is a socket endpoint for the block vviewing!");
+})
+
 const server = app.listen(3002, () => {
     console.log('Server is running on port 3002');
 });
