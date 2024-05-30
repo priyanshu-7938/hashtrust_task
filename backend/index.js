@@ -2,6 +2,7 @@ import express from 'express';
 import WebSocket, { WebSocketServer } from 'ws';
 import url from 'url';
 import 'dotenv/config';
+import { fetchDesiredData } from "./utils.js"
 
 const subscribeRequest = JSON.stringify({
     "jsonrpc": "2.0",
@@ -9,7 +10,9 @@ const subscribeRequest = JSON.stringify({
     "method": "eth_subscribe",
     "params": ["newHeads"]
 });
-let currentSub = '';//by default its none.....
+
+//holds the sub id of current subscription
+let currentSub = '';
 
 const app = express();
 
@@ -18,13 +21,14 @@ const server = app.listen(3002, () => {
 });
 
 const socket = new WebSocketServer({ server });
-// console.log(socket);
-//constants to handle the users....
+
+//maintain the connections....
 const connections = {}
+
 const handleClose = (uid)=>{
     delete connections[uid];
+    //if everyone is dissconected then unsubscribe to infura...
     if(Object.keys(connections).length == 0){
-        //meaning everyon disconnected...
         // unsubscribing to the infura...
         wss.send( `{
                 "jsonrpc": "2.0",
@@ -35,6 +39,7 @@ const handleClose = (uid)=>{
         console.log("Unsubscribed to infura...");
     }
 }
+
 socket.on('connection',(connection, request)=>{
     
     // console.log(request);
@@ -47,13 +52,14 @@ socket.on('connection',(connection, request)=>{
         wss.send(subscribeRequest);
         console.log("sub to the infura....");
     }
+    //handle closing of a connection....
     connection.on('close', () => handleClose(uuid))
 })
 
-//Infura webSocket connection....
+//Infura webSocket connection estabilished....
 const wss = new WebSocket('wss://mainnet.infura.io/ws/v3/'+process.env.INFURA_API_KEY);
-// WIP:edit this  fucntion acccording to use
-const trimData = (data)=>data;
+
+//function to broadcast the block data
 const broadcast = (blockData) => {
     if(Object.keys(connections).length < 1) return;
     Object.keys(connections).forEach(uid=>{
@@ -63,10 +69,12 @@ const broadcast = (blockData) => {
     console.log("done broadcaseting...");
 }
 
+//log when the infura webSocket cnnects...
 wss.on('open', () => {
     console.log('Connected to Infura WebSocket');
 });
 
+//relay the blockData
 wss.on('message', async (data) => {
     const response = await JSON.parse(data);
     if(response?.result){
@@ -74,11 +82,12 @@ wss.on('message', async (data) => {
         console.log(currentSub);
         return;
     }
-    const blockData = trimData(response);
-    console.log(blockData);
-    broadcast(blockData)
+    const desiredData = await fetchDesiredData(response);
+    console.log(desiredData);
+    broadcast(desiredData)
 });
 
+//log when infura web socket disconnects.....
 wss.on('close', () => {
     console.log('Disconnected from Infura WebSocket');
 });
