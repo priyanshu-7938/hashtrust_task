@@ -9,6 +9,8 @@ import {
   ResizablePanelGroup,
 } from "./components/ui/resizable"
 import Transactions from './_components/transactions';
+import { Link2, ReplaceIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 
 function App() {
@@ -28,8 +30,11 @@ function App() {
   
   return (
     <div>
-      <div className="px-5">
-        <h1 className="text-2xl font-bold">eth_getBlockByNumber</h1>
+      <div className="px-5 mt-[10px] flex gap-3 items-end">
+        <div className="text-red-400 mb-[3px]">
+          <ReplaceIcon/>
+        </div>
+        <h1 className="text-4xl font-bold flex items-end">Relay<span className="text-xl text-red-400 hover:text-red-500"><Link to="/stats" className="flex gap-1 items-center">/stats<Link2/> </Link></span></h1>
 
       </div>
       <div className="m-[20px] ">
