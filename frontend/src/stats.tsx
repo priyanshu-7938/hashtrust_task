@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 type SuccessData = {
@@ -64,6 +64,7 @@ export default function Stats() {
                         <div>
                             {data && Object.keys(data).map(key => (
                                 <h1 className="flex flex-col gap-1">
+                                    {/* @ts-ignore */}
                                     <span className="text-3xl text-red-400 hover:text-red-500">{key.slice(0,1).toUpperCase() + key.slice(1)}: <span className="text-2xl text-gray-400">{data[key]}</span></span>
                                 </h1>
                             )
