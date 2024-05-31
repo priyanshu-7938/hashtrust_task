@@ -143,3 +143,8 @@ wss.send( `{
 
 ## Frontend Explanation
  The frontend is preety standard emplementation. using a context provider to store the data, this was done for future if ever project were to expand.
+
+## Usage
+    - `<frontend-url>/`: routes to the home page when loded automatically connects to socket and relay latest blocks.
+    - `<frontend-url>/stats`: If server is in Testing mode then this will show the stats of blocks relayed till now. else shows a <h1>. 
+    - `<backend-urll>/stats`: relay the same informmation above in json format.
