@@ -146,5 +146,5 @@ wss.send( `{
 
 ### Usage
 - `<frontend-url>/`: routes to the home page when loded automatically connects to socket and relay latest blocks.
-- `<frontend-url>/stats`: If server is in Testing mode then this will show the stats of blocks relayed till now. else shows a <h1>. 
+- `<frontend-url>/stats`: If server is in Testing mode then this will show the stats of blocks relayed till now. 
 - `<backend-urll>/stats`: relay the same informmation above in json format.
