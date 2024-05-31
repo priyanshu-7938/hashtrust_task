@@ -40,7 +40,7 @@ const handleClose = (uid)=>{
                 "method": "eth_unsubscribe",
                 "params": ["${currentSub}"]
             }`);
-        console.log("Unsubscribed to infura...");
+        console.log("Unsubscribed to infura:");
     }
 }
 
@@ -48,13 +48,13 @@ socket.on('connection',(connection, request)=>{
     
     // console.log(request);
     const { uuid } = url.parse(request.url,true).query;
-    console.log(uuid);
+    console.log("user_connected: ",uuid);
 
     connections[uuid] = connection;
     //checking if theconnection  is first one....
     if(Object.keys(connections).length == 1){
         wss.send(subscribeRequest);
-        console.log("sub to the infura....");
+        console.log("sub to the infura:");
     }
     //handle closing of a connection....
     connection.on('close', () => handleClose(uuid))
@@ -70,7 +70,7 @@ const broadcast = (blockData) => {
         const connection = connections[uid]
         connection.send(JSON.stringify(blockData));
     })
-    console.log("done broadcaseting...");
+    console.log("Broadcaseted latest block...");
 }
 
 //log when the infura webSocket cnnects...
@@ -83,11 +83,10 @@ wss.on('message', async (data) => {
     const response = await JSON.parse(data);
     if(response?.result){
         currentSub = response.result;
-        console.log(currentSub);
+        console.log("sub_id: ",currentSub);
         return;
     }
     const desiredData = await fetchDesiredData(response);
-    console.log(desiredData);
     broadcast(desiredData)
 });
 
