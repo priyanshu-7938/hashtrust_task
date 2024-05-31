@@ -77,21 +77,60 @@ Before you begin, ensure you have met the following requirements:
 
 ## Project Structure
 
-- **backend/**: Contains the Node.js server code that connects to the Ethereum blockchain via Infura and sends real-time transaction data to the frontend via WebSocket.
-  - `server.js`: The main server file that handles WebSocket connections and blockchain data fetching.
+- **backend/**: 
+  - `index.js`: The server file that handles WebSocket connections and blockchain data fetching.
+  - `logger/`
+    - `index.js`: file that handles logging the performance
+    - `log-data.txt`: file containg the logs.
+  - `utils.js`: utils file that exports function to fetch the txns depending on triggers from infura.
+  - `.env` : env file for backennd
 - **frontend/**: Contains the React application that displays the transaction data.
   - `src/`: Contains all the React components and context providers.
-    - `WebSocketProvider.tsx`: Manages the WebSocket connection and state for transaction data.
-    - `TransactionTable.tsx`: Displays the transaction data in a table format.
+    - `provider/`: Manages the data of the blocks.
+      - `context-provider.tsx`
+    - `_components/`
+      - `block-component.tsx`
+      - `transactions.tsx`
+    - `constants/` : provide the types.
+      - `types.ts`
     - `App.tsx`: The main App component that integrates all parts of the frontend.
+    - `Stats.tsx`: the components that shows the stats of the server performance.
+    - `main.tsx` 
+  - `.env` : env file for frontend
   - `public/`: Contains the static assets for the React application.
   - `package.json`: Contains the project dependencies and scripts for the frontend.
 
 ## Backend Explanation
 
-### Subscription to Infura
+### Connection to Infura
 
 The backend subscribes to the Infura WebSocket API to receive notifications about the latest mined blocks. When new transactions are available, it parses and relays the transaction data to connected frontend clients via WebSocket.
+```javascript
+//Infura webSocket connection estabilished....
+const wss = new WebSocket('wss://mainnet.infura.io/ws/v3/'+process.env.INFURA_API_KEY);
+```
+
+#### Subscribing and Unsubscribing to Infura
+
+Subscribing
+```javascript
+wss.send( `{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "eth_subscribe",
+    "params": ['newHeads']
+}`);
+```
+
+Unsubscribing
+```javascript
+wss.send( `{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "eth_unsubscribe",
+    "params": ["${currentSub}"]
+}`);
+```
 
 ### Optimization
 
@@ -102,4 +141,5 @@ The backend subscribes to the Infura WebSocket API to receive notifications abou
 - **Connection Management**: Dynamically subscribes and unsubscribes to Infura based on user connections.
 - **Data Broadcasting**: Efficiently broadcasts block data to connected clients.
 
-By following these steps and understanding the provided code snippets, you should be able to set up and run the Ethereum Real-Time Transaction Viewer on your local machine successfully. If you have any questions or need further assistance, please feel free to reach out.
+## Frontend Explanation
+ The frontend is preety standard emplementation. using a context provider to store the data, this was done for future if ever project were to expand.
