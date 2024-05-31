@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import './App.css'
 import { useData } from './provider/context-provider'
 import useWebSocket from 'react-use-websocket';
@@ -12,10 +12,10 @@ import Transactions from './_components/transactions';
 
 
 function App() {
-  const {blocks, setBlocks, userUid: uuid, selectedBlock, setSelectedBlock } = useData();
-  const { listening, setListening } = useState<boolean>(false);
+  const { setBlocks, userUid: uuid, selectedBlock } = useData();
+  // const { listening, setListening } = useState<boolean>(false);
   
-  const { lastMessage, readyState } = useWebSocket(import.meta.env.VITE_WS_URL, {
+  const { lastMessage } = useWebSocket(import.meta.env.VITE_WS_URL, {
     queryParams: { uuid }
   })
 

@@ -1,10 +1,10 @@
 import { useData } from "../provider/context-provider";
 import { Blocks, X } from "lucide-react";
-import React, { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 export default function Transactions() {
     const { selectedBlock, setSelectedBlock, blocks } = useData();
-    const [ sort, setSort ] = useState<"acending" | "decending" | "unsorted">("unsorted");
+    // const [ sort, setSort ] = useState<"acending" | "decending" | "unsorted">("unsorted");
 
     const totalAmount = useCallback(()=>{
         let total = 0;

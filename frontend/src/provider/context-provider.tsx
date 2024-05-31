@@ -1,5 +1,6 @@
-import React, { createContext, useState, ReactNode, useEffect } from "react";
+import React, { createContext, useState, ReactNode } from "react";
 import { BlockData } from "@/constants/types";
+//@ts-ignore
 import { v4 } from 'uuid';
 interface DataContextType {
   blocks: BlockData[] | undefined;
@@ -18,7 +19,7 @@ type Props = {
 export default function DataProvider({ children }: Props) {
     const [ blocks, setBlocks] = useState<BlockData[]>([]);
     const [ selectedBlock, setSelectedBlock ] = useState<BlockData>();
-    const [ userUid, setUserUid ] = useState<string>(v4());
+    const [ userUid  ] = useState<string>(v4());
 
     return (
         <MyData.Provider value={{ 
